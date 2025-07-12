@@ -129,7 +129,7 @@ class _CTkCalendarPopup(ctk.CTkFrame):
         self._view_date = (selected_date or date.today()).replace(day=1)
         self._today = date.today()
         
-        self._current_view = "days" # "days", "months", "years"
+        self._current_view = "days"
 
         self._create_widgets()
         self._update_view()
@@ -227,16 +227,13 @@ class _CTkCalendarPopup(ctk.CTkFrame):
             btn = ctk.CTkButton(self._year_frame, text=str(year), command=lambda y=year: self._select_year(y))
             btn.pack(fill="x", padx=5, pady=2)
         
-        # FIX: Robustly scroll to the current year using a fractional position.
         try:
             target_index = year_range.index(self._view_date.year)
             total_items = len(year_range)
             fraction = target_index / total_items if total_items > 0 else 0
             
-            # The after call gives the scrollable frame time to draw itself before we try to scroll
             self._year_frame.after(50, lambda: self._year_frame._parent_canvas.yview_moveto(fraction))
         except ValueError:
-            # Current year not in range, do nothing
             pass
 
     def _show_month_year_view(self):
@@ -270,7 +267,6 @@ class _CTkCalendarPopup(ctk.CTkFrame):
         self._update_view()
 
 
-# --- EXAMPLE USAGE ---
 if __name__ == "__main__":
     
     ctk.set_appearance_mode("system")
