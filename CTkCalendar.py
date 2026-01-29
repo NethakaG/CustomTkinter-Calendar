@@ -5,10 +5,6 @@ import calendar
 from typing import Optional, Callable
 
 class CTkDatePicker(ctk.CTkFrame):
-    """
-    Modern, compact, and intuitive date picker widget for CustomTkinter.
-    Features a redesigned calendar popup inspired by modern web UI.
-    """
     def __init__(self,
                  master: any,
                  width: int = 200,
@@ -40,27 +36,23 @@ class CTkDatePicker(ctk.CTkFrame):
         self.winfo_toplevel().bind("<Configure>", self._update_calendar_position, add="+")
 
     def _update_clear_button(self):
-        """Show or hide the clear button based on whether a date is selected."""
         if self._selected_date:
             self._clear_button.grid(row=0, column=1, padx=(5,0))
         else:
             self._clear_button.grid_forget()
 
     def _clear_date(self):
-        """Clears the selected date and updates the entry."""
         self.set(None)
         if self._command:
             self._command(None)
 
     def _update_calendar_position(self, event=None):
-        """Ensure the calendar popup follows the main window."""
         if self._calendar_window and self._calendar_window.winfo_exists():
             x = self._entry.winfo_rootx()
             y = self._entry.winfo_rooty() + self._entry.winfo_height() + 2
             self._calendar_window.geometry(f"+{x}+{y}")
 
     def _show_calendar(self, event=None):
-        """Create and display the calendar popup."""
         if self._calendar_window is not None:
             return
 
@@ -80,13 +72,11 @@ class CTkDatePicker(ctk.CTkFrame):
         self.winfo_toplevel().bind("<ButtonPress>", self._check_click_outside, add="+")
 
     def _check_click_outside(self, event):
-        """Close calendar if a click occurs outside of it."""
         if self._calendar_window:
             if not self._calendar_window.winfo_containing(event.x_root, event.y_root):
                 self._hide_calendar()
 
     def _hide_calendar(self, event=None):
-        """Destroy the calendar popup."""
         if self._calendar_window:
             self._calendar_window.grab_release()
             self._calendar_window.destroy()
@@ -94,18 +84,15 @@ class CTkDatePicker(ctk.CTkFrame):
             self.winfo_toplevel().unbind("<ButtonPress>")
 
     def _on_date_selected(self, selected_date: date):
-        """Handle date selection from the calendar."""
         self.set(selected_date)
         self._hide_calendar()
         if self._command:
             self._command(selected_date)
 
     def get(self) -> Optional[date]:
-        """Returns the selected date as a datetime.date object, or None."""
         return self._selected_date
 
     def set(self, new_date: Optional[date]):
-        """Sets the selected date. Accepts a datetime.date object or None to clear."""
         if new_date is not None and not isinstance(new_date, date):
             raise ValueError("new_date must be a datetime.date object or None")
 
@@ -118,7 +105,6 @@ class CTkDatePicker(ctk.CTkFrame):
 
 
 class _CTkCalendarPopup(ctk.CTkFrame):
-    """Internal class for the compact, modern calendar view."""
     
     def __init__(self, master, command, selected_date: Optional[date] = None, **kwargs):
         super().__init__(master, **kwargs)
@@ -285,3 +271,4 @@ if __name__ == "__main__":
     date_picker.pack(padx=20, fill="x")
 
     root.mainloop()
+
